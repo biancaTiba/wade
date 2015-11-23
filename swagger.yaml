@@ -1,0 +1,608 @@
+swagger: '2.0'
+info:
+  title: PhoS API
+  description: Discover and treat your phobias with PhoS API
+  version: 1.0.0
+host: api.uber.com
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /phobias:
+    get:
+      summary: Phobias list
+      description: |
+        The Phobias endpoint returns a list of phobias. The response includes the display name, a short description and an id for each phobia.
+      parameters:
+        - name: maxNumber
+          in: query
+          description: Maximum number of phobias returned.
+          required: false
+          type: number
+          format: integer
+        - name: userId
+          in: query
+          description: The user id for whom to return the list of phobias
+          required: false
+          type: number
+          format: integer
+        - name: searchFilter
+          in: query
+          description: One or multiple words to filter the phobias list.
+          required: false
+          type: string
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Phobia
+      responses:
+        '200':
+          description: An array of phobias
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Phobia'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /phobia/{id}:
+    get:
+      summary: A specified phobia
+      description: |
+        The Phobia corresponding to the specified id endpoint returns a short definition, a description, medical advices, an image URL, possible causes and exercises to treat the specified phobia.
+      parameters:
+        - name: id
+          in: path
+          description: The id of the selected phobia.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Phobia
+      responses:
+        '200':
+          description: A Phobia object type
+          schema:
+            $ref: '#/definitions/Phobia'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /addToPhobiasList/{id}:
+    post:
+      summary: Add a new phobia to user's phobias list.
+      description: |
+        The AddToPhobiasList endpoint allows a user to add a new phobia (corresponding to the specified id) to his list of phobias.
+      parameters:
+        - name: id
+          in: path
+          description: The id of the selected phobia.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Phobia
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /activities:
+    get:
+      summary: Activities list
+      description: |
+        The Activities endpoint returns a list of activities. The response includes the type and an id for each activity.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Activity
+      responses:
+        '200':
+          description: An array of activities
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Activity'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /activity/{id}:
+    get:
+      summary: Details list
+      description: |
+        The Activity endpoint returns a list of details. The response includes the name, type and an id for each detail.
+      tags:
+        - Activity
+      parameters:
+        - name: id
+          in: path
+          description: The id of the selected activity.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      responses:
+        '200':
+          description: An array of details
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Detail'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /checkActivity:
+    get:
+      summary: Check the activity regarding the user's phobias list.
+      description: |
+        The CheckActivity endpoint allows a user to check the safety of the activity he wants to do.
+      parameters:
+        - name: activityId
+          in: query
+          description: The id of the selected activity.
+          required: true
+          type: number
+          format: integer
+        - name: detailId
+          in: query
+          description: The id of the selected detail.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Activity
+      responses:
+        '200':
+          description: An array of phobias
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Phobia'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /suggestions/{id}:
+    get:
+      summary: Check the suggestions regarding a phobia.
+      description: |
+        The Suggestions endpoint allows a user to get a list of suggestion to avoid a certain phobia.
+      parameters:
+        - name: id
+          in: path
+          description: The id of the selected phobia.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Activity
+      responses:
+        '200':
+          description: An array of suggestions
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Suggestion'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /groups:
+    get:
+      summary: Groups list
+      description: |
+        The Groups endpoint returns a list of groups. The response includes the display name and an id for each group.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: An array of groups
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /group:
+    get:
+      summary: People list
+      description: |
+        The Group endpoint returns a list of people. The response includes the display name, a photo url and an id for each person.
+      parameters:
+        - name: groupId
+          in: query
+          description: The group id for whom to return the list of people. If none is specified, it will return the entire list of people connected to the user.
+          required: false
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: An array of persons
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Person'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /addPersonToGroup:
+    post:
+      summary: People list
+      description: |
+        The AddPersonToGroup endpoint allows a user to add a new person to his groups.
+      parameters:
+        - name: groupId
+          in: query
+          description: The group id in which the person should be added.
+          required: true
+          type: number
+          format: integer
+        - name: username
+          in: query
+          description: The username for the person to be added.
+          required: true
+          type: string
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /updateProfile:
+    post:
+      summary: User's profile
+      description: |
+        The AboutMe endpoint allows a user to complete his profile.
+      parameters:
+        - name: profile
+          in: body
+          description: The user's profile details.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /me:
+    get:
+      summary: User Profile
+      description: The User Profile endpoint returns information about the user that has authorized with the application.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Profile information for a user
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /pets:
+    get:
+      summary: A list of pets
+      description: The Pets endpoint returns a list of pets that a user can have.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: An array of pets
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /vices:
+    get:
+      summary: A list of vices
+      description: The Vices endpoint returns a list of vices that a user can have.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: An array of vices
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /login:
+    post:
+      summary: Log in an user
+      description: The Login endpoint allows an user to log in.
+      tags:
+        - User
+      responses:
+        '200':
+          description: The id of the logged user
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /logout:
+    post:
+      summary: Log out an user
+      description: The Logout endpoint allows an user to log out.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Phobia:
+    type: object
+    properties:
+      phobiaId:
+        type: number
+        format: integer
+        description: 'A unique identifier for a phobia.'
+      shortDef:
+        type: string
+        description: 'A short definition of phobia.'
+      description:
+        type: string
+        description: 'Description of the phobia.'
+      medicalAdvices:
+        type: string
+        description: 'Medical advices regarding the phobia, possible causes and exercices to treat the phobia.'
+      imageUrl:
+        type: string
+        description: 'Image URL representing the phobia.'
+  Group:
+    type: object
+    properties:
+      groupId:
+        type: number
+        format: integer
+        description: 'A unique identifier for a group.'
+      name:
+        type: string
+        description: 'The name of the group.'
+  Activity:
+    type: object
+    properties:
+      activityId:
+        type: number
+        format: integer
+        description: 'A unique identifier for an activity.'
+      name:
+        type: string
+        description: 'The name of the activity.'
+  Detail:
+    type: object
+    properties:
+      detailId:
+        type: number
+        format: integer
+        description: 'A unique identifier for a detail.'
+      detailType:
+        type: string
+        description: 'The type of the detail.'
+      name:
+        type: string
+        description: 'The name of the detail.'
+  Person:
+    type: object
+    properties:
+      personId:
+        type: number
+        format: integer
+        description: 'Unique identifier representing the person.'
+      name:
+        type: string
+        description: 'The name of the person'
+      username:
+        type: string
+        description: 'A unique username of the person'
+      imageUrl:
+        type: string
+        description: 'Image URL representing the person.'
+  User:
+    type: object
+    properties:
+      gender:
+        type: string
+        description: 'The gender of the person, given as character(f/m)'
+      birthdate:
+        type: string
+        format: date
+        description: 'The birthdate of the person'
+      pets:
+        type: array
+        items:
+          type: string
+        description: 'The pets array of the user'
+      diseases:
+        type: array
+        items:
+          type: string
+        description: 'The diseases array of the user'
+      vices:
+        type: array
+        items:
+          type: string
+        description: 'The vices array of the user'
+      nationality:
+        type: string
+        description: 'The nationality of the user'
+      job:
+        type: string
+        description: 'The job of the user'
+      childs:
+        type: array
+        items:
+          $ref: '#/definitions/Child'
+        description: 'The childs array of the user'
+  Child:
+    type: object
+    properties:
+      birthdate:
+        type: string
+        format: date
+        description: 'The birthdate of the child'
+      name:
+        type: string
+        description: 'The name of the child'
+  Suggestion:
+    type: object
+    properties:
+      phobiaId:
+        type: number
+        format: integer
+        description: 'The id of the phobia.'
+      description:
+        type: string
+        description: 'The description of the suggestion regarding the phobia'
+  LoginResponse:
+    type: object
+    properties:
+      userId:
+        type: number
+        format: integer
+        description: 'The id of the logged user.'
+      accessToken:
+        type: string
+        format: udid
+        description: 'The access token used in the following requests.'
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
