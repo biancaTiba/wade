@@ -1,0 +1,23 @@
+#background {
+	background-image: url("http://wallpaper.pickywallpapers.com/1280x800/screaming.jpg");
+	background-repeat: no-repeat;
+	background-size: 100%;
+	min-height: 100%;
+	min-width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -10;
+}
+
+.logo {
+	margin-left: 50px;
+	margin-top: 50px;
+	width: 160px;
+}
+
+#logo {
+	color: #DEE501;
+	font-size: 40px; 
+	font-family: 'Rexlia';
+}

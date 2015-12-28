@@ -1,0 +1,26 @@
+package models;
+
+import java.util.Date;
+import java.util.List;
+
+import org.json.simple.JSONObject;
+
+public class User extends JSONObject {
+
+	public String gender;
+//	public Date birthdate;
+//	public List<String> animals;
+//	public List<String> diseases;
+//	public List<String> vices;
+//	public String nationality;
+//	public List<Child> childs;
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+}
