@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head> 
+	<script src="js/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="js/jquery.i18n.properties-1.0.9.js"></script>
+	<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+  	<meta name="google-signin-client_id" content="914202679537-01rj5h84c37pvq5cvfm2hr9knoue15f4.apps.googleusercontent.com">
+	<link rel="stylesheet" href="stylesheets/fonts.css">
+  	<link rel="stylesheet" href="stylesheets/general.css">
+  	<link rel="stylesheet" href="stylesheets/home.css">
+</head>
+<body>
+	<div class="background backgroundImage"></div>
+	<div class="background backgroundColor"></div>
+	<div class="headerMenu">
+		<div>
+            <select id="lang" onchange="changeLang(this)">
+                <option value="en" selected>en</option>
+                <option value="ro">ro</option>
+            </select>
+		</div>
+		<p> | </p>
+		<a href="" id="profile">Profile</a>
+		<p> | </p>
+		<a href="login.html" id="signOut" onClick="return onSignOut();">Sign out</a>
+	</div>
+	<div class="logo">
+		<h1 id="logo">PhoS</h1>
+	</div>
+	<div class="leftMenu">
+		<ul>
+			<li id="myPhobias">My Phobias</li>
+			<li id="phobias">Phobias</li>
+		</ul>
+	</div>
+	<div class="activityDropdown">
+		<form>
+			<label>
+			    <select class="activitySelect">
+			        <option id="selectActivity" selected disabled>Select activity</option>
+				 	<option value="volvo">Volvo</option>
+					<option value="saab">Saab</option>
+					<option value="opel">Opel</option>
+					<option value="audi">Audi</option>
+			    </select>
+			</label>
+			<input type="submit" value="OK" class="submitButton"></input>
+		</form>
+	</div>
+<!-- 	<div class="activityDropdown">
+		<form>
+			<div class="selectDiv">
+				<select>
+					<option selected disabled>Activity</option>
+				 	<option value="volvo">Volvo</option>
+					<option value="saab">Saab</option>
+					<option value="opel">Opel</option>
+					<option value="audi">Audi</option>
+				</select>
+			</div>
+			<input type="submit" value="OK" class="submitButton"></input>
+		</form>
+	</div> -->
+</body>
+</html>
+
+<script>
+	function changeLang(lang) {
+	    jQuery.i18n.properties({
+	        name: 'Messages', 
+			path: 'bundle/', 
+			mode: 'both', 
+			language: lang.value, 
+			callback: function() { 
+			$("#myPhobias").text($.i18n.prop('myPhobias'));
+			$("#phobias").text($.i18n.prop('phobias'));
+			$("#profile").text($.i18n.prop('profile'));
+			$("#signOut").text($.i18n.prop('signOut')); 
+			$("#selectActivity").text($.i18n.prop('selectActivity'));  
+			}
+	    });
+	}
+
+	function onSignOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    }
+
+    function onLoad() {
+      gapi.load('auth2', function() {
+        gapi.auth2.init();
+      });
+    }
+</script>

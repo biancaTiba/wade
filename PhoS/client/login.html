@@ -8,7 +8,7 @@
   	<link rel="stylesheet" href="stylesheets/login.css">
 </head>
 <body>
-	<div id="background"></div>
+	<div class="background backgroundImage"></div>
 	<div class="logo">
 		<h1 id="logo">PhoS</h1>
 	</div>
@@ -26,8 +26,14 @@
 		console.log('Name: ' + profile.getName());
 		console.log('Image URL: ' + profile.getImageUrl());
 		console.log('Email: ' + profile.getEmail());
-		var url = '  http://localhost:8080/Phos1/login';
+		
+		var url = 'http://localhost:8080/Phos1/login';
 		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.onreadystatechange = function() {
+    	if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+        	window.location.href = 'home.html';
+    		}
+		}
     	xmlHttp.open( "POST", url, false ); // false for synchronous request
     	xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		xmlHttp.send(JSON.stringify({"name":profile.getName(), "id":profile.getId(), "imageUrl":profile.getImageUrl()}));

@@ -1,13 +1,22 @@
-#background {
-	background-image: url("http://wallpaper.pickywallpapers.com/1280x800/screaming.jpg");
-	background-repeat: no-repeat;
-	background-size: 100%;
+.background {
 	min-height: 100%;
 	min-width: 100%;
 	position: fixed;
 	top: 0;
 	left: 0;
+}
+
+.backgroundImage {
+	background-image: url("http://wallpaper.pickywallpapers.com/1280x800/screaming.jpg");
+	background-repeat: no-repeat;
 	z-index: -10;
+}
+
+.backgroundColor{
+	background-color: black;
+	background-size: 100%;
+	z-index: -9;
+	opacity: 0.6;
 }
 
 .logo {
@@ -20,4 +29,42 @@
 	color: #DEE501;
 	font-size: 40px; 
 	font-family: 'Rexlia';
+}
+
+.leftMenu {
+	display: inline-block;
+	float:left;
+}
+
+.leftMenu ul { 
+	list-style-type: none;
+	border-color: #fff;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 3px;
+	width: 130px;
+	margin-left: 50px;
+	margin-top: 90px;
+	padding: 0px 20px;
+}
+
+.leftMenu li {
+	color: white;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	width:100%;
+	text-align: center;
+	font-size: 20px;
+	font-family: 'NeoSans-Medium';
+}
+
+.leftMenu ul li:nth-child(n+2):before {
+	content: '';
+	display: block;
+	left: 0;
+	background: #fff;
+	height: 1px;
+	margin-left: -20px;
+	margin-bottom: 20px;
+	width: 170px;
 }
