@@ -1,0 +1,114 @@
+package phobias;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.hp.hpl.jena.query.*;
+
+import login.LoginManager;
+
+@Path("/phobias")
+public class PhobiasManager extends Object {
+	
+	static public ArrayList<Integer> myPhobias = new ArrayList<Integer>();
+
+    @GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPhobias(@QueryParam("token") String token) throws JSONException {
+    	
+    	if (!LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	}
+    	
+    	String s2 = "PREFIX  rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX  dct: <http://purl.org/dc/terms/>\n" +
+                "PREFIX  dbo: <http://dbpedia.org/ontology/>\n" +
+                "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
+                "\n" +
+                "SELECT  ?title ?longDesc ?photo ?pageId\n" +
+                "WHERE\n" +
+                "  { ?contrib dct:subject <http://dbpedia.org/resource/Category:Phobias> .\n" +
+                "    ?contrib rdfs:label ?title .\n" +
+                "    ?contrib rdfs:comment ?longDesc .\n" +
+                "    ?contrib dbo:wikiPageID ?pageId .\n" +
+                " OPTIONAL { ?contrib foaf:depiction ?photo. }\n" +
+                "    FILTER (langMatches( lang(?title),  \"en\" ) && langMatches( lang(?longDesc),  \"en\" ))\n" +
+                "  }\n" +
+                "LIMIT   10 OFFSET 1\n" +
+                "";
+
+        Query query = QueryFactory.create(s2); //s2 = the query above
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://dbpedia.org/sparql", query );
+        ResultSet results = qExe.execSelect();
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ResultSetFormatter.outputAsJSON(b, results);
+        JSONObject jsonObject = new JSONObject (b.toString()); 
+		//String result = "@Produces(\"application/json\") Output: \n\nF to C Converter Output: \n\n" + jsonObject;
+		return Response.status(200).entity(jsonObject.toString()).build();
+	  }
+	
+	@Path("/query")
+    @GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPhobias(@QueryParam("maxNumber") Integer maxNumber, @QueryParam("offset") Integer offset, @QueryParam("token") String token) throws JSONException {
+		
+		if (!LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	}
+    	
+		String s2 = "PREFIX  rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX  dct: <http://purl.org/dc/terms/>\n" +
+                "PREFIX  dbo: <http://dbpedia.org/ontology/>\n" +
+                "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
+                "\n" +
+                "SELECT  ?title ?longDesc ?photo ?pageId\n" +
+                "WHERE\n" +
+                "  { ?contrib dct:subject <http://dbpedia.org/resource/Category:Phobias> .\n" +
+                "    ?contrib rdfs:label ?title .\n" +
+                "    ?contrib rdfs:comment ?longDesc .\n" +
+                "    ?contrib dbo:wikiPageID ?pageId .\n" +
+                "    OPTIONAL { ?contrib foaf:depiction ?photo. }\n" +
+                "    FILTER (langMatches( lang(?title),  \"en\" ) && langMatches( lang(?longDesc),  \"en\" ))\n" +
+                "  }\n" +
+                "LIMIT " + maxNumber.toString() + " OFFSET " + 1 + "\n" +
+                "";
+  
+        Query query = QueryFactory.create(s2); //s2 = the query above
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://dbpedia.org/sparql", query );
+        ResultSet results = qExe.execSelect();
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ResultSetFormatter.outputAsJSON(b, results);
+        JSONObject jsonObject = new JSONObject (b.toString()); 
+		//String result = "@Produces(\"application/json\") Output: \n\nF to C Converter Output: \n\n" + jsonObject;
+		return Response.status(200).entity(jsonObject.toString()).build();
+	  }
+	
+	@Path("/add/{phobiaId}")
+    @POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addToPhobiasList(@PathParam("phobiaId") Integer phobiaId, @QueryParam("token") String token) {
+		
+		if (!LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	}
+		
+		myPhobias.add(phobiaId);
+		System.out.println(myPhobias.size());
+		System.out.println(myPhobias.get(myPhobias.size()-1));
+		return Response.status(200).build();
+	  }
+}

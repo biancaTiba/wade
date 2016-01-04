@@ -1,0 +1,97 @@
+package login;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.json.JSONException;
+
+import com.alibaba.fastjson.JSON;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+
+import dbConnections.DatabaseManager;
+
+@Path("/user")
+public class UserManager {
+
+	@GET
+	@Path("/userDetails")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserPhobias(@QueryParam("token") String token) throws JSONException {
+
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+			return Response.status(401).build();
+		}
+
+		String userId = LoginManager.getLoggedInUser(token);
+		String resourceId;
+		if (userId == null) {
+			return Response.status(401).build();
+		} else {
+			if (DatabaseManager.checkIfUserExists(userId) == false) {
+				return Response.status(401).build();
+			} else {
+				resourceId = DatabaseManager.getUserResourceId(userId);
+				if (resourceId == null) {
+					return Response.status(401).build();
+				}
+			}
+		}
+
+		QueryExecution qe = QueryExecutionFactory.sparqlService("http://localhost:3030/ds/query",
+				"PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+						+ "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+						+ "SELECT ?photo ?name WHERE {" 
+						+ "<" + resourceId + "> foaf:depiction ?photo. \n"
+						+ " <" + resourceId + "> foaf:firstName ?name. \n"
+						+ " }");
+		ResultSet results = qe.execSelect();
+		String photo = null;
+		String name = null;
+		String email = null;
+		if (results.hasNext()) {
+			QuerySolution result = results.next();
+			photo = result.getResource("photo").getURI().toString();
+			name = result.getLiteral("name").getString();
+			email = "bianca.tiba@gmail.com";//results.next().getLiteral("email").getString();
+		}
+
+		HashMap<String, String> parsedUser = new HashMap<>();
+		parsedUser.put("photo", photo);
+		parsedUser.put("name", name);
+		parsedUser.put("email", email);
+
+		String jsonObj = JSON.toJSONString(parsedUser);
+		System.out.println(jsonObj.toString());
+		return Response.status(200).entity(jsonObj).build();
+	}
+	
+	@Path("/addFriend/{friendUsername}")
+    @POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addToPhobiasList(@PathParam("friendUsername") String friendUsername, @QueryParam("token") String token) {
+		
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	} else {
+    		DatabaseManager.addUserFriend(token, friendUsername);
+    	}
+		
+		return Response.status(200).build();
+	  }
+
+}

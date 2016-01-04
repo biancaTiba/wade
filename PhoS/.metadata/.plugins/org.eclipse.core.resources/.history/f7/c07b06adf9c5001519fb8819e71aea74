@@ -1,0 +1,227 @@
+package dbConnections;
+import java.util.UUID;
+
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.update.UpdateExecutionFactory;
+import com.hp.hpl.jena.update.UpdateFactory;
+import com.hp.hpl.jena.update.UpdateProcessor;
+
+import login.LoginManager;
+import models.User;
+ 
+/**
+ * Example connection to Fuseki. For this to work, you need to start a local
+ * Fuseki server like this: ./fuseki-server --update --mem /ds
+ */
+public class DatabaseManager{
+	
+	public static Boolean checkIfUserExists(String id) {
+		
+		String totalCount = "";
+		int count = 0;
+		
+	      QueryExecution qe = QueryExecutionFactory.sparqlService(
+	              "http://localhost:3030/ds/query", "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+	            + "PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>"
+	            + "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+				+ "SELECT (str(count(?s)) AS ?total) WHERE {?s rdf:type foaf:Person. "
+				+ "?s phos:id " + id + " .}");
+		  ResultSet results = qe.execSelect();
+	      System.out.println("total:");
+	      if(results.hasNext())
+	      {
+	          totalCount = results.next().getLiteral("total").getString();
+	          count = Integer.parseInt(totalCount);
+	      }
+	      qe.close();
+	      if (count == 0) {
+	    	  return false;
+	      } else {
+	    	  return true;
+	      }
+	}
+	
+	public static void addUser(User user) {
+		if (checkIfUserExists(user.getId()) == true) {
+			return;
+		}
+		System.out.println(user.getName());
+		String INSERT_USER = 
+	            "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
+				+ "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+	            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+	            + "INSERT DATA"
+	            + "{<http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos/%s> rdf:type foaf:Person ;"
+	            + "foaf:firstName \"" + user.getName() + "\" ;"
+	            + "foaf:depiction <" + user.getImageUrl() + "> ;"
+	            + "rdfs:email \"" + user.getEmail() + "\" ;"
+	            + "phos:id  "+ user.getId() +" ." + "}   ";
+		
+		 	String id = UUID.randomUUID().toString();
+	        UpdateProcessor upp = UpdateExecutionFactory.createRemote(
+	                UpdateFactory.create(String.format(INSERT_USER, id)), 
+	                "http://localhost:3030/ds/update");
+	        upp.execute();
+	}
+	
+	public static void addPhobiaToUser(String token, String phobiaResource) {
+		String userId = LoginManager.getLoggedInUser(token);
+		String resourceId;
+		if (userId == null) {
+			return;
+		} else {
+			if (checkIfUserExists(userId) == false) {
+				return;
+			} else {
+				resourceId = getUserResourceId(userId);
+				if (resourceId == null) {
+					return;
+				}
+			}
+		}
+		System.out.println(phobiaResource);
+		String INSERT_USER = 
+	            "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
+				+ "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+				+ "PREFIX phosR: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos/>"
+	            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+				+ "PREFIX dbr: <http://dbpedia.org/resource/>"
+	            + "INSERT DATA"
+	            + "{<%s> phos:hasPhobia dbr:" + phobiaResource +" .}";
+		
+		 	String id = UUID.randomUUID().toString();
+	        UpdateProcessor upp = UpdateExecutionFactory.createRemote(
+	                UpdateFactory.create(String.format(INSERT_USER, resourceId)), 
+	                "http://localhost:3030/ds/update");
+	        upp.execute();
+	}
+	
+	public static void addUserFriend(String token, String friendUsername) {
+		String userId = LoginManager.getLoggedInUser(token);
+		String resourceId;
+		if (userId == null) {
+			return;
+		} else {
+			if (checkIfUserExists(userId) == false) {
+				return;
+			} else {
+				resourceId = getUserResourceId(userId);
+				if (resourceId == null) {
+					return;
+				}
+			}
+		}
+		String userFriendResourceId = getUserFriendResourceId(friendUsername);
+		String INSERT_FRIEND = 
+	            "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+				+ "PREFIX phosR: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos/>"
+	            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+	            + "INSERT DATA"
+	            + "{<%s> foaf:knows <%s>. \n}";
+		
+		 	UpdateProcessor upp = UpdateExecutionFactory.createRemote(
+	                UpdateFactory.create(String.format(INSERT_FRIEND, resourceId, userFriendResourceId)), 
+	                "http://localhost:3030/ds/update");
+	        upp.execute();
+	}
+	
+	public static void removePhobiaToUser(String token, String phobiaResource) {
+		String userId = LoginManager.getLoggedInUser(token);
+		String resourceId;
+		if (userId == null) {
+			return;
+		} else {
+			if (checkIfUserExists(userId) == false) {
+				return;
+			} else {
+				resourceId = getUserResourceId(userId);
+				if (resourceId == null) {
+					return;
+				}
+			}
+		}
+		System.out.println(phobiaResource);
+		String DELETE_PHOBIA = 
+	            "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
+				+ "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+				+ "PREFIX phosR: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos/>"
+	            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+				+ "PREFIX dbr: <http://dbpedia.org/resource/>"
+	            + "DELETE DATA"
+	            + "{<%s> phos:hasPhobia dbr:" + phobiaResource +" .}";
+		
+		 	String id = UUID.randomUUID().toString();
+	        UpdateProcessor upp = UpdateExecutionFactory.createRemote(
+	                UpdateFactory.create(String.format(DELETE_PHOBIA, resourceId)), 
+	                "http://localhost:3030/ds/update");
+	        upp.execute();
+	}
+	
+	public static String getUserResourceId(String userId){
+		System.out.println(userId);
+		QueryExecution qe = QueryExecutionFactory.sparqlService(
+	              "http://localhost:3030/ds/query", "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+	            + "PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>"
+	            + "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+				+ "SELECT  (str(?s) AS ?userResourceId) WHERE {?s phos:id "+ userId 
+				+ " .}");
+		  ResultSet results = qe.execSelect();
+	      if(results.hasNext())
+	      {
+	          String resourceId = results.next().getLiteral("userResourceId").getString();
+	          System.out.println(resourceId);
+	          return resourceId;
+	      }
+	      return null;
+	} 
+	public static String getUserFriendResourceId(String email){
+		QueryExecution qe = QueryExecutionFactory.sparqlService(
+	              "http://localhost:3030/ds/query", "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+	            + "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+				+ "SELECT  ?userFriendResourceId WHERE {?userFriendResourceId rdfs:email \""+ email 
+				+ "\" .}");
+		  ResultSet results = qe.execSelect();
+	      if(results.hasNext())
+	      {
+	          String userFriendResourceId = results.next().getResource("userFriendResourceId").getURI().toString();
+	          System.out.println(userFriendResourceId);
+	          return userFriendResourceId;
+	      }
+	      return null;
+	} 
+	
+	public static void updateUser(User user) {
+		if (checkIfUserExists(user.getId()) == false) {
+			return;
+		}
+		System.out.println(user.getName());
+		String INSERT_USER = 
+	            "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
+				+ "PREFIX phos: <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#>"
+	            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+	            + "INSERT DATA"
+	            + "{<http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos/%s> rdfs:birthDate" + user.getBirthdate() + ";"
+	            + "rdfs:gender \"" + user.getGender() + "\" ;"
+	            + "phos:hasChildren  "+ user.getHasChildren() +" ." + "}   ";
+		
+		 	String id = UUID.randomUUID().toString();
+	        UpdateProcessor upp = UpdateExecutionFactory.createRemote(
+	                UpdateFactory.create(String.format(INSERT_USER, id)), 
+	                "http://localhost:3030/ds/update");
+	        upp.execute();
+	}
+}

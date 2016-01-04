@@ -1,0 +1,87 @@
+package phobias;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.json.JSONException;
+
+import com.alibaba.fastjson.JSON;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+
+import login.LoginManager;
+
+@Path("/")
+public class PhobiasContext {
+	enum Activities {
+		VISIT,
+		WATCH,
+		PRACTICE
+	}
+	
+	public static String getActivityString(Activities activity){
+		switch (activity) {
+		case VISIT:
+			return "visit";
+		case PRACTICE:
+			return "practice sport";
+		case WATCH:
+			return "watch a movie";
+		default: return activity.toString();
+		}
+	}
+	
+	@GET
+	@Path("getActivities")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getActivities(@QueryParam("token") String token) throws JSONException {
+		
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	}
+        
+        ArrayList<String> activities = new ArrayList<String>();
+        activities.add(getActivityString(Activities.WATCH));
+		activities.add(getActivityString(Activities.VISIT));
+		activities.add(getActivityString(Activities.PRACTICE));
+		
+        String jsonObj = JSON.toJSONString(activities);
+        System.out.println(jsonObj.toString()); 
+		return Response.status(200).entity(jsonObj).build();
+	}
+	
+	@GET
+	@Path("getSubactivities")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSubactivities(@QueryParam("activity") String activity, @QueryParam("token") String token) throws JSONException {
+		
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	}
+        Activities a = Activities.valueOf(activity);
+        switch(a) {
+        case VISIT:break;
+			// "visit";
+		case PRACTICE:break;
+			//return "practice sport";
+		case WATCH:break;
+			//return "watch a movie";
+		default:break; //return activity.toString();
+        }
+		
+        String jsonObj = JSON.toJSONString(activities);
+        System.out.println(jsonObj.toString()); 
+		return Response.status(200).entity(jsonObj).build();
+	}
+}

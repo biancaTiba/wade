@@ -1,0 +1,23 @@
+package phobias;
+
+import java.util.ArrayList;
+
+public class PhobiasContext {
+	enum Activities {
+		VISIT,
+		WATCH,
+		PRACTICE
+	}
+	
+	public static String getActivityString(Activities activity){
+		switch (activity) {
+		case VISIT:
+			return "visit";
+		case PRACTICE:
+			return "practice sport";
+		case WATCH:
+			return "watch a movie";
+		default: return activity.toString();
+		}
+	}
+}

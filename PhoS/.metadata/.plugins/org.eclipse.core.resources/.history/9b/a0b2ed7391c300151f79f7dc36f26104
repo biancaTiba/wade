@@ -1,0 +1,206 @@
+package phobias;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.jena.atlas.data.DataBag;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.hp.hpl.jena.query.*;
+
+import dbConnections.DatabaseManager;
+import login.LoginManager;
+
+@Path("/phobias")
+public class PhobiasManager extends Object {
+	
+	static public ArrayList<Integer> myPhobias = new ArrayList<Integer>();
+
+    @GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPhobias(@QueryParam("maxNumber") Integer maxNumber, @QueryParam("offset") Integer offset, @QueryParam("token") String token) throws JSONException {
+		
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	}
+
+		Integer number;
+		if (maxNumber == null) {
+			number = 10;
+		} else {
+			number = maxNumber;
+		}
+		
+		Integer queryOffset;
+		if (offset == null) {
+			queryOffset = 10;
+		} else {
+			queryOffset = maxNumber;
+		}
+		
+		String s2 = "PREFIX  rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX  dct: <http://purl.org/dc/terms/>\n" +
+				"PREFIX dbr: <http://dbpedia.org/resource/>" +
+                "PREFIX  dbo: <http://dbpedia.org/ontology/>\n" +
+                "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
+                "\n" +
+                "SELECT ?resource ?title ?longDesc ?photo ?pageId\n" +
+                "WHERE\n" +
+                "  { ?resource dct:subject <http://dbpedia.org/resource/Category:Phobias> .\n" +
+                "    ?resource rdfs:label ?title .\n" +
+                "    ?resource rdfs:comment ?longDesc .\n" +
+                "    ?resource dbo:wikiPageID ?pageId .\n" +
+                "    OPTIONAL { ?resource foaf:depiction ?photo. }\n" +
+                "    FILTER (langMatches( lang(?title),  \"en\" ) && langMatches( lang(?longDesc),  \"en\" ))\n" +
+                "  }\n" +
+                "LIMIT " + number.toString() + " OFFSET " + queryOffset.toString() + "\n" +
+                "";
+  
+        Query query = QueryFactory.create(s2); //s2 = the query above
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://dbpedia.org/sparql", query );
+        ResultSet results = qExe.execSelect();
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ResultSetFormatter.outputAsJSON(b, results);
+        JSONObject jsonObject = new JSONObject (b.toString()); 
+		//String result = "@Produces(\"application/json\") Output: \n\nF to C Converter Output: \n\n" + jsonObject;
+		return Response.status(200).entity(jsonObject.toString()).build();
+	  }
+	
+	@Path("/add/{phobiaResource}")
+    @POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addToPhobiasList(@PathParam("phobiaResource") String phobiaResource, @QueryParam("token") String token) {
+		
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	} else {
+    		DatabaseManager.addPhobiaToUser(token, phobiaResource);
+    	}
+		
+		return Response.status(200).build();
+	  }
+
+    @POST
+	@Path("/remove/{phobiaResource}")
+    @Consumes(MediaType.APPLICATION_JSON)
+	public Response removeFromPhobiasList(@PathParam("phobiaResource") String phobiaResource, @QueryParam("token") String token) {
+		
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	} else {
+    		DatabaseManager.removePhobiaToUser(token, phobiaResource);
+    	}
+		
+		return Response.status(200).build();
+	  }
+	
+	@GET
+	@Path("/myPhobias")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserPhobias(@QueryParam("maxNumber") Integer maxNumber, @QueryParam("offset") Integer offset, @QueryParam("token") String token) throws JSONException {
+		
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	}
+
+		Integer number;
+		if (maxNumber == null) {
+			number = 10;
+		} else {
+			number = maxNumber;
+		}
+		
+		Integer queryOffset;
+		if (offset == null) {
+			queryOffset = 10;
+		} else {
+			queryOffset = maxNumber;
+		}
+		getUserPhobiasFromLocalDb(token);
+		StringBuilder queryString = new StringBuilder();
+		String s2 = "PREFIX  dbo: <http://dbpedia.org/ontology/>\n" +
+                "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
+                "PREFIX dbr: <http://dbpedia.org/resource/>" +
+                "\n" +
+                "SELECT ?abstr ?longDesc ?photo ?seeAlso " +
+                "WHERE\n {";
+		queryString.append(s2);
+		for (int i=0; i<2; i++) {
+			s2 = phobiaTemplate("Claustrophobia");
+			queryString.append(s2);
+			queryString.append(" UNION ");
+		}
+		queryString.append(phobiaTemplate("Astraphobia"));
+		queryString.append("}");
+
+		Query query = QueryFactory.create(queryString.toString());
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://dbpedia.org/sparql", query );
+        ResultSet results = qExe.execSelect();
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ResultSetFormatter.outputAsJSON(b, results);
+        JSONObject jsonObject = new JSONObject (b.toString()); 
+        System.out.println("PHOBIAS FROM DBPEDIA:");
+        System.out.println(jsonObject.toString()); 
+		return Response.status(200).entity(jsonObject.toString()).build();
+	  }
+	
+	private String getUserPhobiasFromLocalDb(String token){
+		String userId = LoginManager.getLoggedInUser(token);
+		String resourceId;
+		if (userId == null) {
+			return null;
+		} else {
+			if (DatabaseManager.checkIfUserExists(userId) == false) {
+				return null;
+			} else {
+				resourceId = DatabaseManager.getUserResourceId(userId);
+				if (resourceId == null) {
+					return null;
+				}
+			}
+		}
+		String userResourceId = "http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos/" + resourceId;
+		String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+				+ "PREFIX dbo: <http://dbpedia.org/ontology/>"
+				+ "PREFIX dbr: <http://dbpedia.org/resource/>"
+				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+				+ "PREFIX db: <http://dbpedia.org/>"
+				+ "SELECT ?s ?o ?p ?abstr "
+				+ "WHERE {"
+				+ "<%s> <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#hasPhobia> ?p."
+				+ "?p <http://www.semanticweb.org/tibabianca/ontologies/2016/0/phos#activityType> ?abstr."
+				+ "}";
+		Query query = QueryFactory.create(String.format(queryString, userResourceId));
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://dbpedia.org/sparql", query );
+        ResultSet results = qExe.execSelect();
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ResultSetFormatter.outputAsJSON(b, results);
+        JSONObject jsonObject = new JSONObject (b.toString()); 
+        
+        System.out.println("PHOBIAS FROM LOCAL DB:");
+        System.out.println(jsonObject.toString());    
+		return jsonObject.toString();
+	}
+
+	private String phobiaTemplate(String phobiaName) {
+		String template = "{"
+		+ "dbr:%s rdfs:label ?abstr.\n"
+		+ "dbr:%s dbo:abstract ?longDesc.\n"
+		+ " OPTIONAL { dbr:%s foaf:depiction ?photo. dbr:%s rdfs:seeAlso ?seeAlso. }\n"
+		+ " FILTER (langMatches( lang(?title),  \"en\" ) && langMatches( lang(?longDesc),  \"en\" ))\n"
+				+ "}\"";
+		return String.format(template, phobiaName, phobiaName, phobiaName, phobiaName);
+	}
+}

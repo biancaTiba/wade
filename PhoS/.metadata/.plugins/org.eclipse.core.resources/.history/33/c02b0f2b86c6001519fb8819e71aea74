@@ -1,0 +1,56 @@
+package phobias;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+
+import com.alibaba.fastjson.JSON;
+
+public class PhobiasTreatment {
+
+	public static void main(String[] args) throws Exception {
+	    String google = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=";
+	    String search = "claustrophobia treatment";
+	    String charset = "UTF-8";
+
+	    URL url = new URL(google + URLEncoder.encode(search, charset));
+	    Reader reader = new InputStreamReader(url.openStream(), charset);
+//	    JSON.parse(reader,GoogleResults.class);
+//	    GoogleResults results = new Gson().fromJson(reader, GoogleResults.class);
+//
+//	    // Show title and URL of 1st result.
+//	    System.out.println(results.getResponseData().getResults().get(0).getTitle());
+//	    System.out.println(results.getResponseData().getResults().get(0).getUrl());
+	    
+	    
+	    StringBuilder sb = new StringBuilder();
+		URLConnection urlConn = null;
+		InputStreamReader in = null;
+		try {
+			urlConn = url.openConnection();
+			if (urlConn != null)
+				urlConn.setReadTimeout(60 * 1000);
+			if (urlConn != null && urlConn.getInputStream() != null) {
+				in = new InputStreamReader(urlConn.getInputStream(),
+						Charset.defaultCharset());
+				BufferedReader bufferedReader = new BufferedReader(in);
+				if (bufferedReader != null) {
+					int cp;
+					while ((cp = bufferedReader.read()) != -1) {
+						sb.append((char) cp);
+					}
+					bufferedReader.close();
+				}
+			}
+		in.close();
+		} catch (Exception e) {
+			throw new RuntimeException("Exception while calling URL", e);
+		} 
+		System.out.println(sb.toString());
+	}
+	
+}

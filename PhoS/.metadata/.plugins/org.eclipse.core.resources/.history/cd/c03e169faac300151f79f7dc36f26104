@@ -1,0 +1,108 @@
+package phobias;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.json.JSONException;
+
+import com.alibaba.fastjson.JSON;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+
+import login.LoginManager;
+
+@Path("/")
+public class PhobiasContext {
+	enum Activities {
+		VISIT,
+		WATCH,
+		PRACTICE
+	}
+	
+	public static String getActivityString(Activities activity){
+		switch (activity) {
+		case VISIT:
+			return "visit";
+		case PRACTICE:
+			return "practice sport";
+		case WATCH:
+			return "watch a movie";
+		default: return activity.toString();
+		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPhobias(@QueryParam("maxNumber") Integer maxNumber, @QueryParam("offset") Integer offset, @QueryParam("token") String token) throws JSONException {
+		
+		if (token == null || !LoginManager.checkAuthToken(token)) {
+    		return Response.status(401).build();
+    	}
+
+		Integer number;
+		if (maxNumber == null) {
+			number = 10;
+		} else {
+			number = maxNumber;
+		}
+		
+		Integer queryOffset;
+		if (offset == null) {
+			queryOffset = 10;
+		} else {
+			queryOffset = maxNumber;
+		}
+		
+		String s2 = "PREFIX  rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX  dct: <http://purl.org/dc/terms/>\n" +
+				"PREFIX dbr: <http://dbpedia.org/resource/>" +
+                "PREFIX  dbo: <http://dbpedia.org/ontology/>\n" +
+                "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
+                "\n" +
+                "SELECT ?resource ?title ?longDesc ?photo ?pageId\n" +
+                "WHERE\n" +
+                "  { ?resource dct:subject <http://dbpedia.org/resource/Category:Phobias> .\n" +
+                "    ?resource rdfs:label ?title .\n" +
+                "    ?resource rdfs:comment ?longDesc .\n" +
+                "    ?resource dbo:wikiPageID ?pageId .\n" +
+                "    OPTIONAL { ?resource foaf:depiction ?photo. }\n" +
+                "    FILTER (langMatches( lang(?title),  \"en\" ) && langMatches( lang(?longDesc),  \"en\" ))\n" +
+                "  }\n" +
+                "LIMIT " + number.toString() + " OFFSET " + queryOffset.toString();
+  
+        Query query = QueryFactory.create(s2); //s2 = the query above
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://dbpedia.org/sparql", query );
+        ResultSet results = qExe.execSelect();
+        
+        ArrayList<HashMap<String, String>> phobias = new ArrayList<HashMap<String, String>>();
+		while (results.hasNext()) {
+			QuerySolution result = results.next();
+			String title = result.getLiteral("title").getString();
+			String resource = result.getResource("resource").getURI().toString();
+			String longDesc = result.getLiteral("longDesc").getString();
+			//String photo = results.next().getLiteral("photo").getString();
+			HashMap<String, String> parsedPhobia = new HashMap<>();
+			parsedPhobia.put("resource", resource);
+			parsedPhobia.put("title", title);
+			parsedPhobia.put("longDesc", longDesc);
+			parsedPhobia.put("photo", "");
+			phobias.add(parsedPhobia);			
+		}
+		
+        String jsonObj = JSON.toJSONString(phobias);
+        System.out.println(jsonObj.toString()); 
+		return Response.status(200).entity(jsonObj).build();
+	  }
+}

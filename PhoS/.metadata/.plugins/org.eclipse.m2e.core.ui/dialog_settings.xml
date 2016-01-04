@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<section name="org.eclipse.m2e.core.ui.internal.dialogs.EditDependencyDialog">
+		<item value="450" key="height"/>
+		<item value="480" key="width"/>
+		<item value="87" key="y"/>
+		<item value="400" key="x"/>
+	</section>
 	<section name="org.eclipse.m2e.core.pom.overview">
 		<list key="issueManagementUrl">
 		</list>
@@ -33,11 +39,13 @@
 	</section>
 	<section name="wizardPage">
 		<list key="groupId">
+			<item value="Phos2"/>
 			<item value="Phos1"/>
 		</list>
 		<list key="name">
 		</list>
 		<list key="artifactId">
+			<item value="Phos2"/>
 			<item value="Phos1"/>
 		</list>
 		<list key="version">
