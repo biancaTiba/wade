@@ -1,41 +1,57 @@
 <!DOCTYPE html>
-<html>
-<head>  
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
-  	<meta name="google-signin-client_id" content="914202679537-01rj5h84c37pvq5cvfm2hr9knoue15f4.apps.googleusercontent.com">
-	<link rel="stylesheet" href="stylesheets/fonts.css">
-  	<link rel="stylesheet" href="stylesheets/general.css">
-  	<link rel="stylesheet" href="stylesheets/login.css">
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="google-signin-client_id" content="914202679537-01rj5h84c37pvq5cvfm2hr9knoue15f4.apps.googleusercontent.com">
+    <title>Phobias</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/landing-page.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 </head>
+
 <body>
-	<div class="background backgroundImage"></div>
-	<div class="logo">
-		<h1 id="logo">PhoS</h1>
-	</div>
-	<div class="login">
-		<h1 id="login">LOG IN</h1>
-		<div class="g-signin2 googleLogin" data-onsuccess="onSignIn"></div>
-	</div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top topnav">
+        <div class="container topnav">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand topnav logo-text" href="#">PhoS</a>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <!-- Header -->
+    <div class="intro-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="login">
+                        <h1>Login</h1>
+                        <hr class="intro-divider">
+                        <div class="g-signin2 googleLogin" data-onsuccess="onSignIn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </div>
+    <!-- /.intro-header -->
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="js/login.js"></script>
 </body>
 </html>
-
-<script>
-	function onSignIn(googleUser) {
-		var profile = googleUser.getBasicProfile();
-		console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-		console.log('Name: ' + profile.getName());
-		console.log('Image URL: ' + profile.getImageUrl());
-		console.log('Email: ' + profile.getEmail());
-		
-		var url = 'http://localhost:8080/Phos1/login';
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.onreadystatechange = function() {
-    	if (xmlHttp.readyState == XMLHttpRequest.DONE) {
-        	window.location.href = 'home.html';
-    		}
-		}
-    	xmlHttp.open( "POST", url, false ); // false for synchronous request
-    	xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-		xmlHttp.send(JSON.stringify({"name":profile.getName(), "id":profile.getId(), "imageUrl":profile.getImageUrl()}));
-	}
-</script>

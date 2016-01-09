@@ -1,0 +1,433 @@
+body,
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+}
+body{
+    background: url(../img/screaming.jpg) no-repeat center center;
+    background-size: cover;
+}
+.black-cover {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity:0.7;
+    position:fixed;
+}
+.intro-header {
+    padding-bottom: 50px;
+    text-align: center;
+    color: #f8f8f8;
+}
+
+.login{
+    position: relative;
+    padding-top: 20%;
+    padding-bottom: 20%;
+}
+
+
+.intro-divider {
+    width: 250px;
+    border-top: 1px solid #f8f8f8;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+@media(max-width:767px) {
+    .login {
+        padding-bottom: 15%;
+    }
+    .form-group{
+        display: inline-block;
+    }
+    .select-form-control{
+        width: 70vw !important;
+    }
+    .fobias-list{
+        margin: 0 auto;
+        margin-top: 50%;
+    }
+    .fobias-list.phobias-page-small-box.top-margin-50{
+        margin-top: 15%;
+    }
+    .phobias-table{
+        margin-top: 30px !important;
+    }
+    .profile-form{
+        margin-left: 60px;
+    }
+    .profile-data{
+        margin-top: 60px !important;
+    }
+    .about-me-data{
+        margin-top: 60px !important;
+    }
+    .group-data{
+        margin-top: 60px !important;
+    }
+}
+
+@media only screen and (min-width:768px) and (max-width: 1200px){
+    .select-form-control{
+        width: 35vw !important;
+    }
+    .fobias-list.top-margin-50{
+        margin-top: 65%;
+    }
+    .fobias-list.phobias-small-box.top-margin-50{
+        margin-top: 15% !important;
+    }
+    .phobias-table{
+        margin-top: 30px !important;
+    }
+    .top-margin-20{
+        margin-top: 35%;
+    }  
+    .profile-data{
+        margin-top: 60px !important;
+    }
+    .about-me-data{
+        margin-top: 60px !important;
+    }
+    .group-data{
+        margin-top: 60px !important;
+    }
+}
+@media(min-width:1201px){
+    .select-form-control{
+        width: 35vw !important;
+    }
+    .top-margin-20{
+        margin-top: 30%;
+    }
+}
+.language-select{
+    width:50px;
+    height:20px;
+    margin-top: 14px;
+    border-color: rgb(150, 150, 150) !important;
+    margin-right: 15px;
+}
+
+.topnav.logo-text{
+    color: #d68b8b;
+    font-size: 35px;
+}
+.googleLogin{
+    margin: 0 auto;
+    width: 110px;
+}
+.top-margin-50{
+   margin-top: 135px;
+}
+.fobias-list{
+    width: 170px;
+}
+.fobias-list ul{
+    padding: 0;
+    list-style-type: none;
+    border: 1px solid #fff;
+    border-radius: 5px;
+}
+.fobias-list ul li{
+    padding: 10px;
+    border-bottom: 1px solid #fff;
+}
+.fobias-list ul li a{
+    color: #fff;
+}
+.select-list-ok-button{
+    color: black;
+}
+.phobias-table{
+    border:1px solid #fff;
+    margin-top: 135px;
+    height: 400px;
+    border-radius: 5px;
+}
+.phobias-table .col-lg-3{
+    padding-left: 0;
+}
+ul.phobias-list{
+    padding: 0;
+    margin: 0;
+    border-right: 1px solid #fff;
+    height: 398px;
+    overflow: scroll;
+}
+ul.phobias-list li{
+    border-bottom: 1px solid #fff;
+    list-style-type: none;
+    padding: 10px 10px;
+}
+.phobias-right-text-wrapper{
+    padding-top: 30px;
+    height: 398px;
+    overflow: scroll;
+}
+#phobia-title{
+    font-size: 24px;
+    font-weight: bold;
+    color:#d68b8b;
+}
+#phobias-subtitle {
+    font-size: 18px;
+}
+#phobia-image{
+    margin-top: 50px;
+    max-height:300px;
+    max-width:200px;
+}
+.customButton{
+    margin-bottom: 20px;
+    height:30px;
+    border-radius: 6px;
+    padding:3px 8px;
+    border: #d68b8b 2px solid;
+    background-color:  rgba(60, 62, 0, 0.32);
+    color:white;
+    font-weight: bold;
+}
+.profile-data{
+    /*border:1px solid #fff;*/
+    margin-top: 135px;
+    /*height: 320px;*/
+    /*border-radius: 5px;*/
+    /*overflow: hidden;*/
+}
+.profile-data p{
+    margin: 20px;
+    text-align: left;
+}
+.profile-data span{
+    border: 1px white solid;
+    border-radius: 5px;
+    padding:6px;
+    float:right;
+    color:rgba(255, 255, 255, 0.38);
+    overflow: hidden;
+}
+.profile-data select{
+    border: 1px white solid;
+    border-radius: 5px;
+    background-color: transparent;
+    padding:6px;
+    float:right;
+    color:rgba(255, 255, 255, 0.50);
+    overflow: hidden;
+}
+.profile-image {
+    width:150px;
+    height:150px;
+    margin-left:85px;
+    margin-top: 10px;
+}
+.group-data{
+    /*border:1px solid #fff;*/
+    margin-top: 135px;
+    margin-left: -30px;
+    /*height: 320px;*/
+    /*border-radius: 5px;*/
+    /*overflow: scroll;*/
+}
+.friends-list{
+    padding: 0;
+    margin: 0;
+    float:left;
+}
+.friend-image {
+    width:70px;
+    height:70px;
+    border: 1px black solid;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+.img-with-text{
+    display: block;
+    float: left;
+    margin:0px 30px 30px 30px;
+}
+.group-title{
+    font-size: 25px;
+    margin:30px;
+    text-align:left;
+}
+.vertical-nav li ul {
+    display: none;
+    padding: 0;
+    border:none;
+    list-style-type: circle;
+}
+.vertical-nav li ul li{
+    border:none;
+}
+.vertical-nav li:hover ul {
+    display: block;
+}
+.vertical-nav li:hover .sub-menu
+{
+    position: relative;   
+}
+.sub-menu {
+    margin-top: 10px;
+    margin-left: 30px;
+    text-align: left;
+    position: relative;
+    display: block;
+    top: 0;
+    width: 100%;
+    white-space: nowrap;
+    z-index:1;
+}
+.about-me-form{
+    float:left;
+}
+.date-picker{
+    width: 15vw;
+}
+.about-me-data{
+    margin-top: 135px;
+    overflow: hidden;
+}
+/*.about-me-info{
+    width: 15vw !important;
+}*/
+.about-me-data p{
+    margin: 10px 20px;
+    text-align: left;
+
+}
+.about-me-data form{
+    padding-left: 0px;
+}
+.custom-select{
+    border: 1px white solid;
+    border-radius: 5px;
+    background-color: transparent;
+    padding:6px;
+    float:right;
+    color:rgba(255, 255, 255, 0.50);
+    overflow: hidden;
+}
+.date-picker-input{
+    border-radius: 5px;
+    border: 1px solid white;
+    background-color: rgba(227, 227, 227, 0.16);
+    margin-left: 10px;
+}
+.radio-input{
+    margin: 4px 0 0;
+    margin-top: 1px;
+    line-height: normal;
+    margin-left: 20px !important;
+}
+.radio-input-first{
+    margin-left: 65px !important;
+}
+.add-child-button{
+    float: right;
+    height: 20px;
+    line-height: 0.3;
+    margin-right: 10px;
+}
+.saveData{
+    float: left;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.addFriend{
+    float: left;
+    margin-left: 30px;
+}
+.page-title{
+    font-size: 25px !important;
+   
+    color: #fff !important;
+}
+.page-title:before{
+    content:" - ";
+    margin-right: 15px;
+}
+.phobia-panels{
+    margin-top: 90px;
+}
+.phobia-panel{
+    background: transparent;
+    border: white 1px solid;
+}
+.phobia-heading{
+    background-color: #d68b8b;
+    border-color: #d68b8b;
+}
+.phobia-body{
+    background: transparent;
+    border-top: 1px solid #ddd;
+}
+.phobia-footer{
+    background: transparent;
+    border:none;
+}
+.modal-link{
+    color:white;
+    text-decoration: underline;
+    outline:none;
+}
+.modal-container{
+    color:black;
+}
+.addChildWrapper{
+    position: absolute;
+    background-color: white;
+    width: 280px;
+    height: 150px;
+    margin-top: 100px;
+    border: 4px black solid;
+    border-radius: 15px;
+    color: black;
+    display: none;
+}
+.info-title{
+    text-align: left;
+    margin-left: 20px;
+}
+.info-data{
+    float: right;
+    margin-right: 10px;
+    border: 1px black solid;
+    border-radius: 5px;   
+}
+.popover-main-element{
+    margin-top: 10px;
+}
+.popover-select{
+    border: 1px black solid;
+    border-radius: 5px;
+    background-color: transparent;
+    padding:6px;
+    float:right;
+    color:black;
+    overflow: hidden;
+    margin-right: 10px;
+}
+.suggestions-list{
+    list-style: none;
+    padding:0px;
+}
+.subactivity-div{
+    display: block !important;
+    margin-bottom: 20px !important;
+}
+.top-margin-center{
+    margin-top: 15%;
+} 
