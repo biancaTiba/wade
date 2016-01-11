@@ -8336,3 +8336,9 @@ org.eclipse.dltk.core.ModelException: Phos2 does not exist
 
 !ENTRY org.eclipse.m2e.logback.appender 2 0 2016-01-04 21:34:11.647
 !MESSAGE Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2016-01-09 18:52:16.946
+!MESSAGE Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2016-01-09 18:52:16.961
+!MESSAGE Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
