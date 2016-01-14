@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="google-signin-client_id" content="914202679537-01rj5h84c37pvq5cvfm2hr9knoue15f4.apps.googleusercontent.com">
+    <title>Phobias</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/landing-page.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div class="black-cover"></div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top topnav">
+        <div class="container topnav">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand topnav logo-text" href="home.html">PhoS</a>
+                <a class="navbar-brand topnav logo-text page-title" href="home.html" id="phobias-title">Phobias</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <select class="custom-select language-select" id="lang" onchange="changeLang(this)">
+                            <option value="en" selected>en</option>
+                            <option value="fr">fr</option>
+                        </select>
+                    </li>
+                    <li>
+                        <a href="home.html" id="home">Home</a>
+                    </li>
+                    <li>
+                        <a href="profile.html" id="profile">Profile</a>
+                    </li>
+                    <li>
+                        <a href="login.html" id="signOut" onClick="return onSignOut();">Sign out</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <!-- Header -->
+    <div class="intro-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="fobias-list phobias-small-box top-margin-50">
+                        <ul>
+                            <li>
+                                <a href="myPhobias.html" id="my-phobias-button">My Phobias</a>
+                            </li>
+                            <li>
+                                <a href="" id="phobias-button">Phobias</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div id="no-phobia" class="phobias-table"><h4>No phobia found.</h4></div>
+                    <div class="phobias-table" id="phobias-data-table" style="display:none">
+                        <div class="col-lg-3 col-sm-3 col-xs-3">
+                            <ul class="phobias-list" id="phobias-list">
+                            </ul>
+                        </div>
+                        <div class="col-lg-9 col-sm-9 col-xs-9">
+                            <div>
+                            	<div class="col-lg-7 col-sm-7 col-xs-7 phobias-right-text-wrapper">
+                            	<p id="phobia-title"></p>
+                            	<p id="phobias-subtitle">Description</p>
+                                <p id="phobia-description"></p>
+                                <button class="customButton" id="add-to-user-list-btn" type="button" onClick="addSelectedPhobia(this.value)">Add to my phobias</button>
+                            	</div>
+                            	<div class="col-lg-5 col-sm-5 col-xs-5">
+                            		<img id="phobia-image" alt="Phobia" src="img/noImage.png">
+                            	</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </div>
+    <!-- /.intro-header -->
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.i18n.properties-1.0.9.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script src="js/login.js"></script>
+    <script src="js/phobias.js"></script>
+    <script src="js/phobiasList.js"></script>
+</body>
+</html>
