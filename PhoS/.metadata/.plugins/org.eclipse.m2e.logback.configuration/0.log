@@ -4843,3 +4843,7 @@ Caused by: org.eclipse.aether.transfer.ArtifactTransferException: Failure to tra
 2016-01-14 21:56:02,087 [Worker-401] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Volumes/MAC HDD/facultate/WADE/wade/PhoS/Phos2/src/main/resources
 2016-01-14 21:56:02,090 [Worker-401] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
 2016-01-14 21:56:02,091 [Worker-401] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Volumes/MAC HDD/facultate/WADE/wade/PhoS/Phos2/src/test/resources
+2016-01-18 22:18:45,818 [Worker-404] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2016-01-18 22:18:45,818 [Worker-404] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Volumes/MAC HDD/facultate/WADE/wade/PhoS/Phos2/src/main/resources
+2016-01-18 22:18:45,820 [Worker-404] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2016-01-18 22:18:45,821 [Worker-404] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Volumes/MAC HDD/facultate/WADE/wade/PhoS/Phos2/src/test/resources
