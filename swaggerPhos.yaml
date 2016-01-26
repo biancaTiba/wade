@@ -1,0 +1,545 @@
+swagger: '2.0'
+info:
+  title: PhoS API
+  description: Discover and treat your phobias with PhoS API
+  version: 1.0.0
+host: api.uber.com
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /phobias:
+    get:
+      summary: Phobias list
+      description: |
+        The Phobias endpoint returns a list of phobias. The response includes the display name, a short description and an id for each phobia.
+      parameters:
+        - name: maxNumber
+          in: query
+          description: Maximum number of phobias returned.
+          required: false
+          type: number
+          format: integer
+        - name: offset
+          in: query
+          description: Maximum number of phobias returned.
+          required: false
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Phobia
+      responses:
+        '200':
+          description: An array of phobias
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Phobia'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+  /phobias/add/{phobiaResource}:
+    post:
+      summary: Add a new phobia to user's phobias list.
+      description: |
+        The AddToPhobiasList endpoint allows a user to add a new phobia (corresponding to the specified id) to his list of phobias.
+      parameters:
+        - name: phobiaResource
+          in: path
+          description: The name of the selected phobia.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Phobia
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+        '400':
+          description: Bad request
+          schema:
+            type: string
+  /phobias/remove/{phobiaResource}:
+    post:
+      summary: Remove a new phobia from user's phobias list.
+      description: |
+        The remove endpoint allows a user to remove a new phobia (corresponding to the specified id) from his list of phobias.
+      parameters:
+        - name: phobiaResource
+          in: path
+          description: The name of the selected phobia.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Phobia
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+        '400':
+          description: Bad request
+          schema:
+            type: string
+  /getActivities:
+    get:
+      summary: Activities list
+      description: |
+        The Activities endpoint returns a list of activities. The response includes the type and an id for each activity.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Activity
+      responses:
+        '200':
+          description: An array of activities
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Activity'
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+    get:
+      summary: Details list
+      description: |
+        The getActivities endpoint returns a list of predefined activities. The response includes the type for each activity.
+      tags:
+        - Activity
+      parameters:
+        - name: activity
+          in: query
+          description: The selected activity.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      responses:
+        '200':
+          description: An array of subactivities
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Subactivity'
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+  /findPhobias:
+    get:
+      summary: Check the activity regarding the user's phobias list.
+      description: |
+        The CheckActivity endpoint allows a user to check the safety of the activity he wants to do and returns the participants’s phobias that might interfere with the action
+      parameters:
+        - name: activityId
+          in: query
+          description: The id of the selected activity.
+          required: true
+          type: number
+          format: integer
+        - name: detailId
+          in: query
+          description: The id of the selected detail.
+          required: true
+          type: number
+          format: integer
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Activity
+      responses:
+        '200':
+          description: An array of phobias
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Phobia'
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+  /context/getTreatment:
+    get:
+      summary: Check the suggestions regarding a phobia.
+      description: |
+        The getTreatment endpoint allows a user to get a list of linked treatments and tips related to the selected phobia.
+      parameters:
+        - name: phobia
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - Activity
+      responses:
+        '200':
+          description: An array of suggestions and tips
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Suggestion'
+        '400':
+          description: Bad request
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+  /user/friends:
+    get:
+      summary: Groups list
+      description: |
+        The friends endpoint returns a list of people. The response includes the display name, a photo url and an email for each person.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: An array of friends
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Friend'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /user/addFriend:
+    post:
+      summary: People list
+      description: |
+        The addFrieds endpoint allows a user to add a new person to his friends list
+      parameters:
+        - name: username
+          in: query
+          description: The username for the person to be added.
+          required: true
+          type: string
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+  /user/saveUserData:
+    post:
+      summary: User's profile
+      description: |
+        The saveUserData endpoint updates the user profile information with the birthdate, gender, animals and if the user has children.
+      parameters:
+        - name: gender
+          in: query
+          description: The user's genders.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+        - name: animal
+          in: query
+          description: The user's animal.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+        - name: hasChildren
+          in: query
+          description: Whether the user has children or not.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+  /user/getUserData:
+    get:
+      summary: User Profile
+      description: The User Profile endpoint returns information about the user that has authorized with the application.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Profile information for a user
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /user/getAnimals:
+    get:
+      summary: The user's animal
+      description: The Pets endpoint returns the pets that a user can have.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: The pet that a user have
+          schema:
+            type: string
+            items:
+              type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+  /user/userDetails:
+    get:
+      summary: User Details
+      description: The User Details endpoint returns information about the user that has authorized with the application, like photo, name and email
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Profile information for a user
+          schema:
+            $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+  /login:
+    post:
+      summary: Log in an user
+      description: The Login endpoint allows an user to log in.
+      tags:
+        - User
+      responses:
+        '200':
+          description: The id of the logged user
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /logout:
+    post:
+      summary: Log out an user
+      description: The Logout endpoint allows an user to log out.
+      parameters:
+        - name: accessToken
+          in: query
+          description: The access token for the logged user in current session. 
+          required: true
+          type: string
+          format: udid
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successful message
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Phobia:
+    type: object
+    properties:
+      shortDef:
+        type: string
+        description: 'A short definition of phobia.'
+      description:
+        type: string
+        description: 'Description of the phobia.'
+        type: string
+        description: 'Image URL representing the phobia.'
+  Friend:
+    type: object
+    properties:
+      groupId:
+        type: number
+        format: integer
+        description: 'A unique identifier for a group.'
+      name:
+        type: string
+        description: 'The name of the group.'
+  Activity:
+    type: object
+    properties:
+      activityId:
+        type: number
+        format: integer
+        description: 'A unique identifier for an activity.'
+      name:
+        type: string
+        description: 'The name of the activity.'
+  Subactivity:
+    type: object
+    properties:
+      detailId:
+        type: number
+        format: integer
+        description: 'A unique identifier for a detail.'
+      detailType:
+        type: string
+        description: 'The type of the detail.'
+      name:
+        type: string
+        description: 'The name of the detail.'
+  Person:
+    type: object
+    properties:
+      personId:
+        type: number
+        format: integer
+        description: 'Unique identifier representing the person.'
+      name:
+        type: string
+        description: 'The name of the person'
+      username:
+        type: string
+        description: 'A unique username of the person'
+      imageUrl:
+        type: string
+        description: 'Image URL representing the person.'
+  User:
+    type: object
+    properties:
+      gender:
+        type: string
+        description: 'The gender of the person, given as character(f/m)'
+      pets:
+        type: array
+        items:
+          type: string
+        description: 'The pets array of the user'
+      hasChildren:
+        type: string
+        items:
+          type: boolean
+        description: 'The pets of the user'
+  Suggestion:
+    type: object
+    properties:
+      description:
+        type: string
+        description: 'The description of the suggestion regarding the phobia'
+  LoginResponse:
+    type: object
+    properties:
+      userId:
+        type: number
+        format: integer
+        description: 'The id of the logged user.'
+      accessToken:
+        type: string
+        format: udid
+        description: 'The access token used in the following requests.'
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
