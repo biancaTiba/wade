@@ -1,0 +1,80 @@
+#phobiasTable {
+	color: #fff;
+	font-size: 20px; 
+	font-family: 'NeoSans-Light';
+	text-align: center;
+}
+
+#phobiasTable td{
+	padding:10px; 
+}
+
+#table-wrapper {
+	position:relative;
+display: inline-block;
+width: 25%;
+float: left;
+border:white 3px solid;
+border-radius: 10px 0px 0px 10px;
+}
+
+#table-scroll {
+  height:500px;
+  overflow:auto;  
+}
+
+#table-wrapper table {
+  width:100%;
+}
+
+#table-wrapper table thead th .text {
+  position:absolute;   
+  top:-20px;
+  z-index:2;
+  height:20px;
+  width:35%;
+  border:1px solid red;
+}
+
+.phobiaDetails {
+color: white;
+width: 60%;
+height: 100.2%;
+display: inline-block;
+border-radius: 0px 10px 10px 0px;
+border-color:white;
+border-width:3px 3px 3px 0px;
+border-style:solid;
+overflow: auto;
+}
+
+#phobiaTitle {
+  font-size:34px;
+margin-left: 7%;
+padding:0px;
+margin-bottom: 0px;
+font-family: 'NeoSans-Light';
+color:#DEE501;
+}
+
+#phobiaDesc {
+  font-size: 22px;
+margin-left: 3%;
+margin-right: 3%;
+margin-top:0;
+font-family: 'NeoSans-Light';
+}
+
+#addToUserListButton {
+  float:right;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  height:30px;
+  border-radius: 6px;
+  border:none;
+  padding:3px 8px;
+  border: #DEE501 2px solid;
+  background-color:  rgba(60, 62, 0, 0.32);
+  color:white;
+  font-weight: bold;
+}

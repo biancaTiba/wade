@@ -9,6 +9,7 @@
 .backgroundImage {
 	background-image: url("http://wallpaper.pickywallpapers.com/1280x800/screaming.jpg");
 	background-repeat: no-repeat;
+	 background-size: 100%;
 	z-index: -10;
 }
 
@@ -16,7 +17,7 @@
 	background-color: black;
 	background-size: 100%;
 	z-index: -9;
-	opacity: 0.6;
+	opacity: 0.8;
 }
 
 .logo {
@@ -34,6 +35,12 @@
 .leftMenu {
 	display: inline-block;
 	float:left;
+	margin-top: 7%;
+}
+
+a {
+	color: white;
+	text-decoration: none; 
 }
 
 .leftMenu ul { 
@@ -44,7 +51,7 @@
     border-width: 3px;
 	width: 130px;
 	margin-left: 50px;
-	margin-top: 90px;
+	margin-top: 0px;
 	padding: 0px 20px;
 }
 
@@ -56,6 +63,7 @@
 	text-align: center;
 	font-size: 20px;
 	font-family: 'NeoSans-Medium';
+	cursor:pointer;
 }
 
 .leftMenu ul li:nth-child(n+2):before {
@@ -67,4 +75,85 @@
 	margin-left: -20px;
 	margin-bottom: 20px;
 	width: 170px;
+}
+
+.headerMenu {
+	float: right;
+	color:white;
+	margin-top: -50px;
+	margin-right: 10px;
+}
+
+.headerMenu p {
+	color: #fff;
+	display: inline-block;
+}
+
+.headerMenu a {
+	color: #fff;
+	display: inline-block;
+}
+
+.headerMenu div {
+	color: #fff;
+	display: inline-block;
+}
+
+select {
+	margin: 0;
+	background: rgba(227, 220, 225, 0.7);
+	border:none;
+	outline:none;
+	-webkit-appearance: none;
+   	-moz-appearance: none;
+   	appearance: none;
+	cursor:pointer;
+	font-family: 'NeoSans-Medium';
+}
+
+#lang {
+	font-size: 11px;
+	height: 14px;
+	width:35px;	
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	border-radius:5px;
+	padding:2px 6px;
+}
+
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	select {padding-right:18px}
+}
+
+label {
+	position:relative
+}
+
+.afterLang:after {
+	height: 20px;
+    top: 0px;
+	right: 6px;
+}
+
+.afterDropdown:after {
+	content: '>';
+	font-size: 11px;
+	font-weight: bolder;
+	-webkit-transform: rotate(90deg); */
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	transform: rotate(90deg);
+	padding: 0px;
+	position: absolute;
+	pointer-events: none;
+	color:black;
+}
+
+.content {
+	display: inline-block;
+	margin-left: 10%;
+	margin-top: 7%;
+	width: 65%;
+	height:500px;
 }
